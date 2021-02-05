@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Immersion-journal</title>
+</head>
+<body>
+<h1>Immersion-journal</h1>
+<p>Immersion simply implies consistent exposure to your target language.<br>You can put immersion in two categories:<br>
+    1. Active immersion - when you are 100% focus on content <br>
+    2. Passive immersion - listening you to your target language while doing other stuff like laundry </p>
+<form method="POST">
+    <input name="hours" id="id_input_hours" placeholder="HH"/>
+    <input name="minutes" id="id_input_minutes" placeholder="MM"/>
+    <select name="category" id="id_input_category">
+        <option value="active">Active immersion</option>
+        <option value="passive">Passive immersion</option>
+    </select>
+    <button id="id_input_submit">Submit</button>
+    {% csrf_token %}
+</form>
+<table id="id_journal_table">
+    <tr>
+        <th>Category</th>
+        <th>Time</th>
+    </tr>
+    <tr>
+        <td>Active</td>
+        <td>{{ active.hours }}:{{ active.minutes }}</td>
+    </tr>
+    <tr>
+        <td>Passive</td>
+        <td>{{ passive.hours }}:{{ passive.minutes }}</td>
+    </tr>
+</table>
+</body>
+</html>
