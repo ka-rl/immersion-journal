@@ -33,12 +33,18 @@ class JournalModelTest(TestCase):
 
     def test_minutes_over_60_are_covert_to_hours(self):
         item = Journal(hours=0, minutes=80, category='passive')
-        item.full_clean()
+        item.save()
         self.assertEqual(item.hours, 1)
         self.assertEqual(item.minutes, 20)
 
-    def test_wrong_empty_string_raises_validation_error(self):
+    def test_empty_string_raises_validation_error(self):
         item = Journal(hours='01', minutes='', category='passive')
+        with self.assertRaises(ValidationError):
+            item.full_clean()
+            item.save()
+
+    def test_string_that_cann_not_be_cover_to_int_raises_validation_error(self):
+        item = Journal(hours='acx', minutes='01', category='passive')
         with self.assertRaises(ValidationError):
             item.full_clean()
             item.save()

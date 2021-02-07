@@ -8,7 +8,6 @@ IMMERSION_CATEGORY_CHOICES = [
 ]
 
 
-# Create your models here.
 class Journal(models.Model):
     hours = models.PositiveIntegerField()
     minutes = models.PositiveIntegerField()
@@ -18,13 +17,14 @@ class Journal(models.Model):
         return f'{self.category} {self.hours:02d}:{self.minutes:02d}'
 
     def clean(self):
+        super().clean()
         if self.hours == 0 and self.minutes == 0:
-            raise ValidationError('Immersion can not be shorter than 1 minutes')
-        if self.hours == '' or self.minutes == '':
-            raise ValidationError('Fields can not be empty')
+            raise ValidationError('Immersion can not be shorter than 1 minute')
 
+    def save(self, *args, **kwargs):
         self.hours += self.minutes // 60
         self.minutes %= 60
+        super().save(*args, **kwargs)
 
     @staticmethod
     def sum_up_times(category):
