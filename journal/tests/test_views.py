@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import patch, Mock
 from django.http import HttpRequest
+
+from journal.forms import JournalForm
 from journal.views import home_page
 
 from django.test import TestCase
@@ -34,3 +36,7 @@ class HomePageTest(TestCase):
     def test_renders_home_page_after_POST_with_invalid_data(self):
         response = self.client.post('/', data={'hours': '', 'minutes': '', 'category': 'active'})
         self.assertTrue(response.status_code, 200)
+
+    def test_home_page_uses_item_form(self):
+        response = self.client.get('/')
+        self.assertIsInstance(response.context['form'], JournalForm)
