@@ -1,20 +1,14 @@
 import time
 
-from django.test import LiveServerTestCase
-from selenium import webdriver
+from django.contrib.auth.models import User
+
+from functional_tests.base import FunctionalTest
 from selenium.webdriver.support.select import Select
 
 
-class JournalTest(LiveServerTestCase):
+class JournalTest(FunctionalTest):
 
-    def setUp(self) -> None:
-        self.browser = webdriver.Chrome()
-        self.browser.get(self.live_server_url)
-
-    def tearDown(self) -> None:
-        self.browser.quit()
-
-    def test_can_start_a_journal(self):
+    def test_multiple_users_can_start_a_journal(self):
         # Karolina has heard about a cool new method for language learning
         # She notices the page title and header mention Immersion-journal
         self.assertIn('Immersion-journal', self.browser.title)
@@ -24,6 +18,11 @@ class JournalTest(LiveServerTestCase):
         # She notice a small explanation about different types of input
         self.assertIn('Active immersion', self.browser.find_element_by_tag_name('p').text)
         self.assertIn('Passive immersion', self.browser.find_element_by_tag_name('p').text)
+
+        # She creates account and login to her page
+        user = User.objects.create_user('karolina', 'karolina@example.com', 'password')
+        self.client.force_login(user)
+        self.browser.get(self.live_server_url + f'/{user.username}/')
 
         # She notice there is place to input her time and type of her immersion
         input_hours = self.browser.find_element_by_id('id_hours')
@@ -42,14 +41,7 @@ class JournalTest(LiveServerTestCase):
 
         # The page updates and she can her immersion time in table
 
-        table = self.browser.find_element_by_id('id_journal_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == 'Active 00:00' for row in rows)
-        )
-        self.assertTrue(
-            any(row.text == 'Passive 01:30' for row in rows)
-        )
+        self.check_values_in_immersion_table('00:00', '01:30')
 
         # she still see input form and use it again
         input_hours = self.browser.find_element_by_id('id_hours')
@@ -63,13 +55,22 @@ class JournalTest(LiveServerTestCase):
         select_input_category.select_by_value('active')
         self.browser.find_element_by_id('id_submit').click()
 
-        table = self.browser.find_element_by_id('id_journal_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == 'Active 02:00' for row in rows)
-        )
-        self.assertTrue(
-            any(row.text == 'Passive 01:30' for row in rows)
-        )
+        self.check_values_in_immersion_table('02:00', '01:30')
 
-        # Happy that everything worked she goes back to her immersion
+        self.client.logout()
+        self.browser.quit()
+        # Happy that everything worked she recommends website to her friend Karol
+        # Karol can see that previous users accumulated some immersion hours
+        self.browser.get(self.live_server_url)
+
+        self.check_values_in_immersion_table('02:00', '01:30')
+
+        # He creates account and can see empty table for him
+        user = User.objects.create_user('karol', 'karol@example.com', 'password')
+
+        self.client.force_login(user)
+        self.browser.get(self.live_server_url + f'/{user.username}/')
+
+        self.check_values_in_immersion_table('00:00', '00:00')
+
+        # Happy that everything works he goes immerse
