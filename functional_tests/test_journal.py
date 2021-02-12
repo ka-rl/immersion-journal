@@ -1,7 +1,7 @@
 import time
 
 from django.contrib.auth.models import User
-
+from seleniumlogin import force_login
 from functional_tests.base import FunctionalTest
 from selenium.webdriver.support.select import Select
 
@@ -21,7 +21,7 @@ class JournalTest(FunctionalTest):
 
         # She creates account and login to her page
         user = User.objects.create_user('karolina', 'karolina@example.com', 'password')
-        self.client.force_login(user)
+        force_login(user, self.browser, self.live_server_url)
         self.browser.get(self.live_server_url + f'/{user.username}/')
 
         # She notice there is place to input her time and type of her immersion
@@ -57,10 +57,10 @@ class JournalTest(FunctionalTest):
 
         self.check_values_in_immersion_table('02:00', '01:30')
 
-        self.client.logout()
-        self.browser.quit()
         # Happy that everything worked she recommends website to her friend Karol
         # Karol can see that previous users accumulated some immersion hours
+        self.browser.delete_all_cookies()
+
         self.browser.get(self.live_server_url)
 
         self.check_values_in_immersion_table('02:00', '01:30')
@@ -68,9 +68,8 @@ class JournalTest(FunctionalTest):
         # He creates account and can see empty table for him
         user = User.objects.create_user('karol', 'karol@example.com', 'password')
 
-        self.client.force_login(user)
+        force_login(user, self.browser, self.live_server_url)
         self.browser.get(self.live_server_url + f'/{user.username}/')
-
         self.check_values_in_immersion_table('00:00', '00:00')
 
         # Happy that everything works he goes immerse

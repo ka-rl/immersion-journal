@@ -1,9 +1,3 @@
-import unittest
-from unittest.mock import patch, Mock
-from django.http import HttpRequest
-
-from journal.views import home_page
-
 from django.test import TestCase
 from journal.forms import JournalForm
 

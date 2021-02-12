@@ -2,7 +2,6 @@ from django import forms
 
 from journal.models import Journal
 
-EMPTY_ITEM_ERROR = "Field can't be empty"
 
 class JournalForm(forms.models.ModelForm):
     class Meta:

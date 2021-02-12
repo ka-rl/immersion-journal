@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'journal'
+    'journal',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,6 @@ LOGGING = {
     },
     'root': {'level': 'INFO'},
 }
+
+# LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
