@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
+from django.utils import timezone
 
 IMMERSION_CATEGORY_CHOICES = [
     ('active', 'Active immersion'),
@@ -14,6 +15,7 @@ class Journal(models.Model):
     minutes = models.PositiveIntegerField()
     category = models.CharField(choices=IMMERSION_CATEGORY_CHOICES, max_length=7)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    time = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f'{self.category} {self.hours:02d}:{self.minutes:02d}'

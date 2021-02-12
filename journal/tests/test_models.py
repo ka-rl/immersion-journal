@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
+
 from journal.models import Journal
 
 from django.core.exceptions import ValidationError
@@ -80,3 +82,7 @@ class JournalModelTest(TestCase):
         with self.assertRaises(ValidationError):
             item.full_clean()
             item.save()
+
+    def test_model_saves_current_time(self):
+        Journal.objects.create(hours=1, minutes=1, category='passive', user=self.user)
+        self.assertEqual(Journal.objects.first().time, timezone.now().date())
