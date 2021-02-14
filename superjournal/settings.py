@@ -132,5 +132,5 @@ LOGGING = {
     'root': {'level': 'INFO'},
 }
 
-# LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'user_redirect'
+LOGOUT_REDIRECT_URL = 'home'

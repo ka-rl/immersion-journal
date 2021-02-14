@@ -11,6 +11,7 @@ class JournalTest(FunctionalTest):
     def test_multiple_users_can_start_a_journal(self):
         # Karolina has heard about a cool new method for language learning
         # She notices the page title and header mention Immersion-journal
+        print(self.live_server_url)
         self.assertIn('Immersion-journal', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Immersion-journal', header_text)

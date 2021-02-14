@@ -5,6 +5,16 @@
     <title>Immersion-journal</title>
 </head>
 <body>
+<nav role="navigation">
+    <a class="navbar-brand" href="/">Home</a>
+    {% if user.is_authenticated %}
+        <li>User: {{ user.get_username }}</li>
+        <li><a id="id_journal" href="{% url 'user' user.get_username %}">User journal</a></li>
+        <li><a id="id_logout" href="{% url 'logout' %}">Logout</a></li>
+    {% else %}
+        <li><a id="id_login" href="{% url 'login' %}">Login</a></li>
+    {% endif %}
+</nav>
 {% block content %}
 {% endblock %}
 </body>
