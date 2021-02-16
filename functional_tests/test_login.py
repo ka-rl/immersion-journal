@@ -1,4 +1,4 @@
-from unittest import skip
+import time
 
 from django.contrib.auth.models import User
 from selenium.webdriver.common.keys import Keys
@@ -15,16 +15,16 @@ class LoginTest(FunctionalTest):
 
         # he submit all necessary info
         self.browser.find_element_by_id('id_username').send_keys('karol')
-        self.browser.find_element_by_id('id_email').send_keys('karol@example.com')
-        self.browser.find_element_by_id('id_password').send_keys('karol')
-        self.browser.find_element_by_id('id_password').send_keys(Keys.ENTER)
+        self.browser.find_element_by_id('id_password1').send_keys('Better!Password1')
+        self.browser.find_element_by_id('id_password2').send_keys('Better!Password1')
+        self.browser.find_element_by_id('id_password2').send_keys(Keys.ENTER)
 
         # and is redirected to his personal journal
         self.assertEqual(self.live_server_url + '/karol/', self.browser.current_url)
 
     def test_user_can_login_and_logout(self):
         ## create User
-        User.objects.create_user('karolina', 'karolina@example.com', 'karolina')
+        User.objects.create_user(username='karolina', password='karolina')
         # Karolina wants to login to her account on new computer
         # she finds login button and is redirected to login page
         self.browser.find_element_by_id('id_login').click()

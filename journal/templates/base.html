@@ -13,6 +13,7 @@
         <li><a id="id_logout" href="{% url 'logout' %}">Logout</a></li>
     {% else %}
         <li><a id="id_login" href="{% url 'login' %}">Login</a></li>
+        <li><a id="id_register" href="{% url 'register' %}">Register</a></li>
     {% endif %}
 </nav>
 {% block content %}

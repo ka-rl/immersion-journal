@@ -11,7 +11,6 @@ class JournalTest(FunctionalTest):
     def test_multiple_users_can_start_a_journal(self):
         # Karolina has heard about a cool new method for language learning
         # She notices the page title and header mention Immersion-journal
-        print(self.live_server_url)
         self.assertIn('Immersion-journal', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Immersion-journal', header_text)
@@ -21,7 +20,7 @@ class JournalTest(FunctionalTest):
         self.assertIn('Passive immersion', self.browser.find_element_by_tag_name('p').text)
 
         # She creates account and login to her page
-        user = User.objects.create_user('karolina', 'karolina@example.com', 'password')
+        user = User.objects.create_user('karolina', 'password')
         force_login(user, self.browser, self.live_server_url)
         self.browser.get(self.live_server_url + f'/{user.username}/')
 
@@ -67,7 +66,7 @@ class JournalTest(FunctionalTest):
         self.check_values_in_immersion_table('02:00', '01:30')
 
         # He creates account and can see empty table for him
-        user = User.objects.create_user('karol', 'karol@example.com', 'password')
+        user = User.objects.create_user('karol', 'password')
 
         force_login(user, self.browser, self.live_server_url)
         self.browser.get(self.live_server_url + f'/{user.username}/')
