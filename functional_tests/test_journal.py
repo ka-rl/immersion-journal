@@ -8,6 +8,32 @@ from selenium.webdriver.support.select import Select
 
 class JournalTest(FunctionalTest):
 
+    def test_user_can_delete_last_submission(self):
+        user = User.objects.create_user('Grzegorz', 'password')
+        force_login(user, self.browser, self.live_server_url)
+        self.browser.get(self.live_server_url + f'/{user.username}/')
+
+        input_hours = self.browser.find_element_by_id('id_hours')
+        input_minutes = self.browser.find_element_by_id('id_minutes')
+        input_category = self.browser.find_element_by_id('id_category')
+        select_input_category = Select(input_category)
+
+        # he fills form with data
+        input_hours.send_keys('21')
+        input_minutes.send_keys('30')
+        select_input_category.select_by_value('passive')
+        self.browser.find_element_by_id('id_submit').click()
+
+        # The page updates and she can her immersion time in table
+
+        self.check_values_in_immersion_table('00:00', '21:30')
+        # he clicks delete last after realising he put wrong time
+
+        self.browser.find_element_by_id('id_delete_last').click()
+        self.browser.switch_to_alert().accept()
+        # now the table is once again empty
+        self.check_values_in_immersion_table('00:00', '00:00')
+
     def test_multiple_users_can_start_a_journal(self):
         # Karolina has heard about a cool new method for language learning
         # She notices the page title and header mention Immersion-journal

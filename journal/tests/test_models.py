@@ -86,3 +86,10 @@ class JournalModelTest(TestCase):
     def test_model_saves_current_time(self):
         Journal.objects.create(hours=1, minutes=1, category='passive', user=self.user)
         self.assertEqual(Journal.objects.first().time, timezone.now().date())
+
+    def test_delete_last_saved(self):
+        Journal.objects.create(hours=1, minutes=0, category='passive', user=self.user)
+        Journal.objects.create(hours=2, minutes=0, category='passive', user=self.user)
+        Journal.delete_last(self.user)
+        self.assertEqual(Journal.objects.filter(user=self.user).count(), 1)
+        self.assertEqual(Journal.objects.first().hours, 1)

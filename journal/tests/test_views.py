@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest
 
 from journal.forms import JournalForm
-from journal.views import user_page
+from journal.views import user_page, delete_last
 
 from django.test import TestCase
 from journal.models import Journal
@@ -102,3 +102,19 @@ class UserPageUnitTest(unittest.TestCase):
             self.request, 'journal/user.html',
             {'active': {'hours': '00', 'minutes': '00'}, 'passive': {'hours': '00', 'minutes': '00'}, 'form': mock_form}
         )
+
+
+@patch('journal.views.Journal.delete_last')
+class UserPageUnitTest(unittest.TestCase):
+
+    def setUp(self):
+        self.request = HttpRequest()
+        self.request.user = Mock(username='karolina', is_authenticated=True)
+
+    @patch('journal.views.redirect')
+    def test_redirects_user_page_after_calling_delete_last(
+            self, mock_redirect, mock_delete_last):
+        response = delete_last(self.request, self.request.user.username)
+
+        self.assertEqual(response, mock_redirect.return_value)
+        self.assertTrue(mock_delete_last.called)

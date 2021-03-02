@@ -7,7 +7,12 @@
     <form method="POST">
         {{ form.as_p }}
         <button id="id_submit">Submit</button>
+        </button>
         {% csrf_token %}
+    </form>
+    <form action="{% url 'delete' user.get_username %}">
+        <button id="id_delete_last" onclick="confirm('this action can\'t be reverted are you sure')">Delete Last
+        </button>
     </form>
     <table id="id_journal_table">
         <tr>

@@ -55,3 +55,7 @@ class Journal(models.Model):
         ret['minutes'] = '%02d' % minutes
 
         return ret
+
+    @staticmethod
+    def delete_last(username):
+        Journal.objects.filter(user=User.objects.get(username=username)).last().delete()

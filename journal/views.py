@@ -27,3 +27,8 @@ def user_page(request, username):
         return render(request, 'journal/user.html', context)
     else:
         return HttpResponseForbidden()
+
+
+def delete_last(request, username):
+    Journal.delete_last(username)
+    return redirect(f'/{username}/')
