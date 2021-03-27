@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load crispy_forms_filters %}
 {% block content %}
     <h1>Immersion-journal</h1>
     <p>Immersion simply implies consistent exposure to your target language.<br>You can put immersion in two categories:<br>
         1. Active immersion - when you are 100% focus on content <br>
         2. Passive immersion - listening you to your target language while doing other stuff like laundry </p>
     <form method="POST">
-        {{ form.as_p }}
+        {{ form|crispy }}
         <button id="id_submit">Submit</button>
         </button>
         {% csrf_token %}
@@ -14,7 +15,7 @@
         <button id="id_delete_last" onclick="confirm('this action can\'t be reverted are you sure')">Delete Last
         </button>
     </form>
-    <table id="id_journal_table">
+    <table id="id_journal_table" class="table">
         <tr>
             <th>Category</th>
             <th>Time</th>
